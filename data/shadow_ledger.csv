@@ -1,0 +1,5 @@
+issue_id,employee_id,issue_type,melzi_calc,davinci_calc,diff,logic_text,status,reason
+ISSUE-001,1001,소급,5450000,5000000,450000,10월 1일부 과장 승진으로 인한 기본급 인상분 소급 적용 (10월 급여 차액),Pending,
+ISSUE-002,1002,일할,-1200000,0,-1200000,11/10 육아휴직 시작으로 인한 일할 계산 감액,Pending,
+ISSUE-003,1003,근태,0,0,0,11월 근태 미마감 2건 존재,Pending,근태 미마감
+ISSUE-004,1004,수당,3300000,3200000,100000,자녀 출산으로 인한 가족수당 추가,Pending,
