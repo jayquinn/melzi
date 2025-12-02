@@ -269,8 +269,6 @@ def handle_insight_action(insight):
 
 # --- Sidebar ---
 with st.sidebar:
-    st.title("Melzi Talk 🤖")
-    
     # --- Melzi's Deep Insight (Sidebar) ---
     insights = insight_engine.detect_insights(st.session_state['issues'])
     if insights:
@@ -282,7 +280,7 @@ with st.sidebar:
                     handle_insight_action(insight)
         st.divider()
     
-    st.markdown("---")
+    st.title("Melzi Talk 💬")
     
     # Chat History
     for msg in st.session_state['chat_history']:
