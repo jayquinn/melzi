@@ -103,7 +103,8 @@ def generate_mock_data(base_issues, target_count=150):
             template.pop('job_change_date', None) 
 
         # 5. Bottleneck Manager Mock Data (Only for General)
-        if template['special_status'] == "일반 (특이사항 없음)" and template['type'] == 'Chaser' and random.random() < 0.7: 
+        if template['special_status'] == "일반 (특이사항 없음)" and template['type'] == 'Chaser': 
+            # Force bottleneck for demo: Accumulate issues for Park
             template['workplace'] = "대전"
             template['manager_id'] = "박지점장"
             
