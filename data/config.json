@@ -4,7 +4,7 @@
   "meal_tax_free_limit": 200000,
   "family_allowance_per_person": 100000,
   "zombie_months": 3,
-  "bottleneck_limit": 10,
+  "bottleneck_limit": 5,
   "ghost_shift_tolerance": 60,
   "notification_schedule": [
     "D-5",
