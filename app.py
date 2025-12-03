@@ -129,7 +129,8 @@ if 'data_loaded' not in st.session_state:
     all_issues = chaser_issues + auditor_issues + welfare_issues
     
     # --- Mock Data Enrichment for Melzi 2.0 (Refactored) ---
-    expanded_issues = mock_generator.generate_mock_data(all_issues, target_count=150)
+    # Optimized for Demo: Reduced scale to 50 issues (approx 400 employees) for speed
+    expanded_issues = mock_generator.generate_mock_data(all_issues, target_count=50)
 
     st.session_state['issues'] = expanded_issues
     st.session_state['completed_issues'] = []
@@ -144,7 +145,7 @@ def reset_app():
 def handle_approve(issue, rerun=True):
     # Simulate API call
     with st.spinner("메신저 발송 중..."):
-        time.sleep(0.8)
+        time.sleep(0.3) # Optimized for Demo
     st.toast(f"✅ {issue['name']}님에게 독촉 메시지를 발송했습니다.")
     
     # Move to completed
@@ -160,7 +161,7 @@ def handle_approve(issue, rerun=True):
 def handle_apply(issue, rerun=True):
     # Simulate DB Update
     with st.spinner("Davinci DB 업데이트 중..."):
-        time.sleep(1.0)
+        time.sleep(0.3) # Optimized for Demo
     st.toast(f"✅ {issue['name']}님의 급여 정보가 업데이트되었습니다.")
     
     # Move to completed
@@ -189,7 +190,7 @@ def handle_ignore(issue, rerun=True):
 def handle_welfare_approve(issue, rerun=True):
     # 1. Simulate API call
     with st.spinner("급여 대장 반영 중..."):
-        time.sleep(1.0)
+        time.sleep(0.3) # Optimized for Demo
     
     # 2. Create new Payroll Issue (Integration)
     new_payroll_issue = {
@@ -221,7 +222,7 @@ def handle_welfare_approve(issue, rerun=True):
 
 def handle_welfare_reject(issue, rerun=True):
     with st.spinner("반려 처리 중..."):
-        time.sleep(0.5)
+        time.sleep(0.2) # Optimized for Demo
     st.toast(f"🚫 {issue['name']}님의 의료비 청구가 반려되었습니다.")
     
     # Move to completed
@@ -264,7 +265,7 @@ def handle_insight_action(insight):
     st.session_state['issues'] = [i for i in st.session_state['issues'] if i['issue_id'] not in target_ids]
     
     st.toast(f"✅ {processed_count}건의 이슈를 처리하고 완료 내역으로 이동했습니다.")
-    time.sleep(1)
+    time.sleep(0.5)
     st.rerun()
 
 # --- Sidebar ---
@@ -360,7 +361,7 @@ def render_admin_page():
         
         if st.button("🚀 Run Simulation", type="primary"):
             with st.spinner("영향도 분석 중..."):
-                time.sleep(1.5) # Fake simulation
+                time.sleep(0.5) # Fake simulation
                 
             # Mock Impact Analysis
             st.success("시뮬레이션 완료!")

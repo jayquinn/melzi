@@ -93,7 +93,8 @@ def generate_mock_data(base_issues, target_count=150):
                 template['event_id'] = "상시 복리후생"
 
         # 4. Role-Pay Mismatch Mock Data (Only for General)
-        if template['special_status'] == "일반 (특이사항 없음)" and i % 50 == 0 and template['type'] == 'Auditor':
+        # Force at least one occurrence for demo (i==0 ensures it appears)
+        if template['special_status'] == "일반 (특이사항 없음)" and template['type'] == 'Auditor' and (i == 0 or i % 50 == 0):
              template['job_change_date'] = (datetime.now() - timedelta(days=90)).strftime("%Y-%m-%d")
              template['title'] = "위험수당 (Role-Pay Mismatch)"
              template['diff'] = 150000

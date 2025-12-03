@@ -4,9 +4,16 @@
   "meal_tax_free_limit": 200000,
   "family_allowance_per_person": 100000,
   "zombie_months": 3,
-  "bottleneck_limit": 15,
+  "bottleneck_limit": 10,
   "ghost_shift_tolerance": 60,
-  "notification_schedule": ["D-5", "D-3", "D-1"],
-  "vip_filter": ["Executive", "Team Lead"],
+  "notification_schedule": [
+    "D-5",
+    "D-3",
+    "D-1"
+  ],
+  "vip_filter": [
+    "Executive",
+    "Team Lead"
+  ],
   "msg_template": "안녕하세요 {name}님, 급여 마감을 위해 확인 부탁드립니다."
 }
