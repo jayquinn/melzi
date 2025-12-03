@@ -114,6 +114,7 @@ def generate_mock_data(base_issues, target_count=150):
             template['workplace'] = "대전"
             template['manager_id'] = "박지점장"
             template['event_id'] = "11월 근태 마감" # Ensure valid event ID
+            template['description'] = "11월 근태 확정 미완료" # Fix KeyError
         elif template['special_status'] == "일반 (특이사항 없음)" and template['type'] == 'Chaser': 
             template['workplace'] = "대전"
             template['manager_id'] = "박지점장"

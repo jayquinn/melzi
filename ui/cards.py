@@ -20,7 +20,7 @@ def render_chaser_card(issue, on_approve, on_ignore=None, key_suffix="", read_on
                     </div>
                     <div class="stat-item">
                         <span class="stat-label">미마감 내역</span>
-                        <span class="stat-value warning-text">{issue['description']}</span>
+                        <span class="stat-value warning-text">{issue.get('description', '미마감')}</span>
                     </div>
                 </div>
                 <div style="margin-top: 15px; padding: 10px; background-color: #f8fafc; border-radius: 8px; border-left: 4px solid #3b82f6;">
