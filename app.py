@@ -1,7 +1,7 @@
 import streamlit as st
 import pandas as pd
 import time
-from modules import data_loader, logic_chaser, logic_auditor, logic_welfare, chatbot, mock_generator, insight_engine
+from modules import data_loader, logic_chaser, logic_auditor, logic_welfare, chatbot, mock_generator, insight_engine, config_manager
 from ui import cards
 
 # --- Page Config ---
@@ -304,9 +304,90 @@ with st.sidebar:
     st.markdown("<div style='margin-top: 100px;'></div>", unsafe_allow_html=True) 
     if st.button("🔄 데모 초기화", type="primary", use_container_width=True):
         reset_app()
+        
+    st.markdown("---")
+    admin_mode = st.toggle("⚙️ Admin Mode")
+
+def render_admin_page():
+    st.title("Melzi Admin: Control Center 🛠️")
+    st.caption("급여 계산 파라미터 및 리스크 감지 임계값을 설정합니다.")
+    
+    config = config_manager.load_config()
+    
+    # Tabs
+    tab1, tab2, tab3, tab4 = st.tabs(["⚙️ 기초 설정", "🧠 심층 분석", "🔔 알림 봇", "🛡️ 시뮬레이션"])
+    
+    with tab1:
+        st.subheader("Global Parameters")
+        col1, col2 = st.columns(2)
+        with col1:
+            new_min_wage = st.number_input("최저임금 (원)", value=config.get('min_wage', 9860))
+            new_overtime_rate = st.number_input("야근 할증률 (배)", value=config.get('overtime_rate', 1.5), step=0.1)
+        with col2:
+            new_meal_limit = st.number_input("식대 비과세 한도 (원)", value=config.get('meal_tax_free_limit', 200000))
+            new_family_allowance = st.number_input("가족수당 인당 (원)", value=config.get('family_allowance_per_person', 100000))
+            
+    with tab2:
+        st.subheader("Insight Thresholds")
+        new_zombie_months = st.slider("직무 불일치 감지 (개월)", 1, 12, config.get('zombie_months', 3))
+        new_bottleneck_limit = st.number_input("결재 병목 경고 (건수)", value=config.get('bottleneck_limit', 15))
+        new_ghost_tolerance = st.number_input("유령 근무 허용 오차 (분)", value=config.get('ghost_shift_tolerance', 60))
+        
+    with tab3:
+        st.subheader("Chaser Config")
+        new_schedule = st.multiselect("알림 발송 스케줄", ["D-5", "D-3", "D-1", "D-Day"], default=config.get('notification_schedule', ["D-5", "D-3", "D-1"]))
+        new_vip_filter = st.multiselect("VIP 필터 (발송 제외)", ["Executive", "Team Lead", "Manager"], default=config.get('vip_filter', ["Executive", "Team Lead"]))
+        new_template = st.text_area("메시지 템플릿", value=config.get('msg_template', ""))
+        
+    with tab4:
+        st.subheader("Simulation & Save")
+        st.info("설정 변경 후 '시뮬레이션'을 먼저 실행해야 저장이 가능합니다.")
+        
+        # Draft Config Object
+        draft_config = config.copy()
+        draft_config.update({
+            "min_wage": new_min_wage,
+            "overtime_rate": new_overtime_rate,
+            "meal_tax_free_limit": new_meal_limit,
+            "family_allowance_per_person": new_family_allowance,
+            "zombie_months": new_zombie_months,
+            "bottleneck_limit": new_bottleneck_limit,
+            "ghost_shift_tolerance": new_ghost_tolerance,
+            "notification_schedule": new_schedule,
+            "vip_filter": new_vip_filter,
+            "msg_template": new_template
+        })
+        
+        if st.button("🚀 Run Simulation", type="primary"):
+            with st.spinner("영향도 분석 중..."):
+                time.sleep(1.5) # Fake simulation
+                
+            # Mock Impact Analysis
+            st.success("시뮬레이션 완료!")
+            col_a, col_b = st.columns(2)
+            with col_a:
+                st.metric("예상 급여 변동", "+0.5%", delta_color="inverse")
+            with col_b:
+                st.metric("감지될 이슈 수", "8건 (+3)", delta_color="inverse")
+                
+            st.warning("⚠️ 변경 사항을 적용하시겠습니까?")
+            if st.button("💾 Save & Apply"):
+                if config_manager.save_config(draft_config):
+                    st.toast("설정이 저장되었습니다!")
+                    time.sleep(1)
+                    st.rerun()
+                else:
+                    st.error("저장 실패")
+        
+        if st.button("초기화 (Reset to Default)"):
+            config_manager.reset_config()
+            st.rerun()
 
 # --- Main Content ---
-st.title("Melzi InBOX 📥")
+if admin_mode:
+    render_admin_page()
+else:
+    st.title("Melzi InBOX 📥")
 
 # --- Daily Briefing Dashboard ---
 with st.container():

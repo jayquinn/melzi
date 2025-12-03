@@ -1,18 +1,22 @@
+from modules import config_manager
+
 def detect_insights(issues):
     """
     Analyzes the list of issues and detects potential risks or anomalies.
     Returns a list of insight dictionaries.
     """
+    config = config_manager.load_config()
     insights = []
     
     # 1. Role-Pay Mismatch (Limit to 1 for variety)
     mismatch_issues = [i for i in issues if i.get('job_change_date')]
     if mismatch_issues:
         issue = mismatch_issues[0] 
+        # In a real scenario, we'd check date diff against config['zombie_months']
         insights.append({
             "type": "Role-Pay Mismatch",
             "title": "직무 불일치 수당 발견",
-            "message": f"**{issue['name']}**님은 3개월 전 사무직으로 발령 났으나, 규정에 어긋난 **'{issue['title']}'**이 계속 지급되고 있습니다.",
+            "message": f"**{issue['name']}**님은 {config['zombie_months']}개월 전 사무직으로 발령 났으나, 규정에 어긋난 **'{issue['title']}'**이 계속 지급되고 있습니다.",
             "action": "지급 중단 및 환수 제안",
             "color": "red",
             "issue_ids": [issue['issue_id']] 
@@ -44,12 +48,17 @@ def detect_insights(issues):
             manager_issue_ids[mgr].append(i['issue_id'])
             
         total_chasers = len(chaser_issues)
+        bottleneck_limit = config.get('bottleneck_limit', 15)
+        
         for mgr, count in manager_counts.items():
-            if count >= total_chasers * 0.5 and total_chasers > 1: 
+            # Use config threshold (default 15) OR percentage logic. 
+            # For this demo, let's respect the config limit if it's set low, or keep the percentage logic.
+            # User requested: "pending_count_limit: [ 15 ] cases"
+            if count >= bottleneck_limit: 
                 insights.append({
                     "type": "Bottleneck Manager",
                     "title": "결재 병목 감지",
-                    "message": f"현재 미마감 건의 **{int(count/total_chasers*100)}%**가 **'{mgr}'** 결재함에 멈춰 있습니다. 개별 독촉보다 리마인드가 효과적입니다.",
+                    "message": f"현재 미마감 건이 **{count}건**으로 설정된 한도({bottleneck_limit}건)를 초과하여 **'{mgr}'** 결재함에 멈춰 있습니다.",
                     "action": f"{mgr}에게 요약 리포트 발송",
                     "color": "orange",
                     "issue_ids": manager_issue_ids[mgr] 
